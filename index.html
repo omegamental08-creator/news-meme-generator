@@ -27,6 +27,15 @@ body{background:#15161a;color:#e8e6e3;font-family:"Microsoft YaHei","PingFang SC
 .imgslot{position:absolute;left:494px;top:316px;width:661px;height:518px;overflow:hidden;background:transparent}
 .imgslot img{width:100%;height:100%;object-fit:cover;display:none}
 @media (max-width:1100px){.app{flex-direction:column}.panel{width:100%;flex:none}.stage{width:100%;overflow:auto}}
+
+.result{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:rgba(8,8,10,.9);padding:20px}
+.result.on{display:flex}
+.result-card{background:#1c1d23;border:1px solid #33353e;border-radius:16px;padding:18px;max-width:92vw;max-height:92vh;overflow:auto;text-align:center}
+.result-card p{font-size:13px;color:#a9abb4;margin-bottom:12px}
+.result-card img{max-width:100%;max-height:70vh;border-radius:8px;display:block;margin:0 auto}
+.result-card .row{display:flex;gap:10px;justify-content:center;margin-top:14px}
+.result-card button{padding:10px 18px;border:0;border-radius:8px;background:#33353e;color:#e8e6e3;font:inherit;font-size:14px;cursor:pointer}
+.result-card button.primary{background:#e0201a;color:#fff;font-weight:700}
 </style>
 </head>
 <body>
@@ -56,6 +65,17 @@ body{background:#15161a;color:#e8e6e3;font-family:"Microsoft YaHei","PingFang SC
       <div class="imgslot" id="slot"><img id="userImg" alt=""></div>
     </div>
   </main>
+</div>
+
+
+<div class="result" id="result">
+  <div class="result-card">
+    <p>手机长按图片保存 · 电脑右键另存为（如果没弹出下载）</p>
+    <img id="resultImg" alt="">
+    <div class="row">
+      <button class="primary" id="closeResult">关闭</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -165,13 +185,33 @@ document.getElementById('export').addEventListener('click', ()=>{
     drawBlock(title, 10, 41, 1145, 128, 96, 22, '900');
     drawBlock(sub, 36, 173, 1113, 109, 52, 16, '400');
 
-    const a = document.createElement('a');
-    a.download = 'news-' + Date.now() + '.png';
-    a.href = c.toDataURL('image/png');
-    a.click();
+    let dataUrl;
+    try {
+      dataUrl = c.toDataURL('image/png');
+    } catch(err) {
+      alert('导出失败：' + err.message);
+      return;
+    }
+    try {
+      const a = document.createElement('a');
+      a.download = 'news-' + Date.now() + '.png';
+      a.href = dataUrl;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function(){ document.body.removeChild(a); }, 100);
+    } catch(err) {}
+    const rImg = document.getElementById('resultImg');
+    if (rImg) {
+      rImg.src = dataUrl;
+      document.getElementById('result').classList.add('on');
+    }
   };
 
   if(bg.complete) draw(); else bg.onload = draw;
+});
+
+document.getElementById('closeResult').addEventListener('click', ()=>{
+  document.getElementById('result').classList.remove('on');
 });
 
 window.addEventListener('load', ()=>{ scaleStage(); render(); });
