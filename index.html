@@ -105,7 +105,7 @@ function render(){
   const t = document.getElementById('title').value;
   const s = document.getElementById('sub').value;
   fit(tTitle, tTitleSpan, t, 96, 22);
-  fit(tSub, tSubSpan, s, 52, 16);
+  fit(tSub, tSubSpan, s, 40, 14);
 }
 
 ['title','sub'].forEach(id=>{
@@ -188,7 +188,7 @@ document.getElementById('export').addEventListener('click', ()=>{
     }
 
     drawBlock(title, 10, 41, 1145, 128, 96, 22, 'bold');
-    drawBlock(sub, 36, 173, 1113, 109, 52, 16, 'normal');
+    drawBlock(sub, 36, 173, 1113, 109, 40, 14, 'normal');
 
     let dataUrl;
     try {
