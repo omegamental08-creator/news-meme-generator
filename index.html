@@ -21,8 +21,8 @@ body{background:#15161a;color:#e8e6e3;font-family:"Microsoft YaHei","PingFang SC
 .stage{flex:1;min-width:0;display:flex;justify-content:center}
 .canvas-box{position:relative;width:1156px;height:867px;transform-origin:top left;background:#fff;box-shadow:0 20px 60px rgba(0,0,0,.5);flex:0 0 auto}
 .canvas-box img.bg{position:absolute;inset:0;width:100%;height:100%;display:block}
-.tbox{position:absolute;display:flex;align-items:center;justify-content:center;overflow:hidden;color:#fff;text-align:center;line-height:1.12;padding:6px 16px}
-#tTitle{left:10px;top:41px;width:1145px;height:128px;font-weight:900;letter-spacing:-1px}
+.tbox{position:absolute;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#fff;color:#000;text-align:center;line-height:1.12;padding:6px 16px;font-family:"SimSun","宋体",serif}
+#tTitle{left:10px;top:41px;width:1145px;height:128px;font-weight:700;letter-spacing:0}
 #tSub{left:36px;top:173px;width:1113px;height:109px;font-weight:400}
 .imgslot{position:absolute;left:494px;top:316px;width:661px;height:518px;overflow:hidden;background:transparent}
 .imgslot img{width:100%;height:100%;object-fit:cover;display:none}
@@ -138,6 +138,11 @@ document.getElementById('export').addEventListener('click', ()=>{
   const draw = ()=>{
     ctx.drawImage(bg, 0, 0, W, H);
 
+    // 用白色盖住原图的黑条与蓝条
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(10, 41, 1145, 128);
+    ctx.fillRect(36, 173, 1113, 109);
+
     const title = document.getElementById('title').value.trim();
     const sub = document.getElementById('sub').value.trim();
 
@@ -169,21 +174,21 @@ document.getElementById('export').addEventListener('click', ()=>{
       if(!text) return;
       let size = maxSize, lines = [];
       while(size > minSize){
-        ctx.font = weight + ' ' + size + 'px "Microsoft YaHei","PingFang SC",sans-serif';
+        ctx.font = weight + ' ' + size + 'px "SimSun","宋体",serif';
         lines = wrap(ctx, text, w - 32);
         if(lines.length * size * 1.16 <= h - 12) break;
         size -= 2;
       }
       const lh = size * 1.16;
       const startY = y + (h - lines.length * lh) / 2 + lh * 0.82;
-      ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = '#000000';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'alphabetic';
       lines.forEach((ln, i)=>ctx.fillText(ln, x + w/2, startY + i*lh));
     }
 
-    drawBlock(title, 10, 41, 1145, 128, 96, 22, '900');
-    drawBlock(sub, 36, 173, 1113, 109, 52, 16, '400');
+    drawBlock(title, 10, 41, 1145, 128, 96, 22, 'bold');
+    drawBlock(sub, 36, 173, 1113, 109, 52, 16, 'normal');
 
     let dataUrl;
     try {
